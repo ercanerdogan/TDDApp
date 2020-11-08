@@ -8,12 +8,18 @@ namespace UnitTest.Test
 {
     public class CalculatorTest
     {
+        public Calculator calculator { get; set; }
+
+        public CalculatorTest()
+        {
+            this.calculator = new Calculator();
+        }
         [Fact]
         public void AddTest()
         {
             int a = 5;
             int b = 20;
-            var calculator = new Calculator();
+            //var calculator = new Calculator();
 
             var total = calculator.add(a, b);
 
@@ -61,15 +67,22 @@ namespace UnitTest.Test
         [Theory]
         [InlineData(5, 20, 25)]
         [InlineData(3, 5, 8)]
-        public void TestSumWithParameter(int a, int b, int expectedTotal)
+        public void Add_simpleValues_ReturnTotal(int a, int b, int expectedTotal)
         {
-            var calculator = new Calculator();
-
             var actualTotal = calculator.add(a, b);
 
             Assert.Equal(expectedTotal, actualTotal);
         }
 
+        [Theory]
+        [InlineData(0, 20, 0)]
+        [InlineData(3, 0, 0)]
+        public void Add_zeroValues_ReturnTotalZero(int a, int b, int expectedTotal)
+        {
+            var actualTotal = calculator.add(a, b);
+
+            Assert.Equal(expectedTotal, actualTotal);
+        }
 
 
     }
