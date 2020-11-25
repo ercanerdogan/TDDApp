@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnitTest.APP;
@@ -10,9 +11,12 @@ namespace UnitTest.Test
     {
         public Calculator calculator { get; set; }
 
+        public Mock<ICalculatorService> myMock { get; set; }
+
         public CalculatorTest()
         {
-            this.calculator = new Calculator();
+            myMock = new Mock<ICalculatorService>();
+            this.calculator = new Calculator(myMock.Object);
         }
         [Fact]
         public void AddTest()
@@ -64,15 +68,6 @@ namespace UnitTest.Test
 
         }
 
-        [Theory]
-        [InlineData(5, 20, 25)]
-        [InlineData(3, 5, 8)]
-        public void Add_simpleValues_ReturnTotal(int a, int b, int expectedTotal)
-        {
-            var actualTotal = calculator.add(a, b);
-
-            Assert.Equal(expectedTotal, actualTotal);
-        }
 
         [Theory]
         [InlineData(0, 20, 0)]
@@ -84,6 +79,30 @@ namespace UnitTest.Test
             Assert.Equal(expectedTotal, actualTotal);
         }
 
+        [Theory]
+        [InlineData(5, 20, 25)]
+        [InlineData(3, 5, 8)]
+        public void Add_simpleValues_ReturnTotal(int a, int b, int expectedTotal)
+        {
+            myMock.Setup(x => x.add(a, b)).Returns(expectedTotal);
+
+            var actualTotal = calculator.add(a, b);
+
+            Assert.Equal(expectedTotal, actualTotal);
+        }
+
+        [Theory]
+        [InlineData(5, 20, 100)]
+        [InlineData(3, 5, 15)]
+
+        public void Multiply_simpleValues_ReturnTotal(int a, int b, int expectedValue)
+        {
+            myMock.Setup(x => x.multiply(a, b)).Returns(expectedValue);
+
+            var actualTotal = calculator.multiply(a, b);
+
+            Assert.Equal(expectedValue, actualTotal);
+        }
 
     }
 }
